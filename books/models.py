@@ -6,7 +6,7 @@ class Book(models.Model):
     slug = models.SlugField(null=True)
     genre = models.CharField(max_length=100)
     author = models.CharField(max_length=100)
-    isbn = models.CharField(max_length=100)
+    isbn = models.IntegerField()
     count = models.IntegerField(null=True, default=0)
 
 

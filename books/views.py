@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from books.models import Book
-from django.views.generic import TemplateView, DetailView, ListView
+from django.views.generic import TemplateView, DetailView, ListView, FormView
 from django.db.models import F
 from django.utils import timezone
+from books.forms import AddForm
 # Create your views here.
 class IndexView(ListView):
     model = Book
@@ -34,3 +35,8 @@ class GenreView(ListView):
     paginate_by = 2
     def get_queryset(self, *args, **kwargs):
         return Book.objects.filter(genre__icontains = self.kwargs.get('genre'))
+
+class AddBookView(FormView):
+    template_name='add.html'
+    form_class = AddForm
+    success_url = '/index/'
