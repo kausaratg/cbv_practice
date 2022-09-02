@@ -1,6 +1,7 @@
+from re import template
 from django.shortcuts import render
 from books.models import Book
-from django.views.generic import TemplateView, DetailView, ListView, FormView
+from django.views.generic import TemplateView, DetailView, ListView, FormView, CreateView, UpdateView
 from django.db.models import F
 from django.utils import timezone
 from books.forms import AddForm
@@ -11,8 +12,9 @@ class IndexView(ListView):
     context_object_name = 'books'
     paginate_by = 4
 
-    def get_queryset(self):
-        return Book.objects.all()[:3]
+    # def get_queryset(self):
+    #     return Book.objects.all()[:3]
+
 
 
 
@@ -36,7 +38,28 @@ class GenreView(ListView):
     def get_queryset(self, *args, **kwargs):
         return Book.objects.filter(genre__icontains = self.kwargs.get('genre'))
 
-class AddBookView(FormView):
-    template_name='add.html'
+# class AddBookView(FormView):
+#     template_name='add.html'
+#     form_class = AddForm
+#     success_url = '/books/'
+
+#     def form_valid(self, form):
+#         form.save()
+#         return super().form_valid(form)
+
+
+class AddBookView(CreateView):
+    model = Book
+    template_name = 'add.html'
+    success_url = '/books/'
     form_class = AddForm
-    success_url = '/index/'
+    def get_initial(self, *args, **kwargs):
+        initial = super().get_initial(**kwargs)
+        initial['title'] = 'Enter Title'
+        return initial
+
+class AddEditView(UpdateView):
+    model = Book
+    template_name = 'add.html'
+    form_class = AddForm
+    success_url = '/books/'
